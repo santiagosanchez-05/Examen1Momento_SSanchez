@@ -1,0 +1,59 @@
+services:
+  database:
+    image: postgres:16-alpine
+    container_name: rrhh-database
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - rrhh-net
+    # Sin "ports": la BD NO se expone fuera de la red Docker
+
+  api:
+    build: ./api
+    container_name: rrhh-api
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      API_PORT: 3000
+      TOLERANCIA_MIN: ${TOLERANCIA_MIN}
+    ports:
+      - "${API_PORT}:3000"   # expuesto solo para probar el API directo (curl/Postman)
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - rrhh-net
+
+  web:
+    build: ./web
+    container_name: rrhh-web
+    ports:
+      - "${WEB_PORT}:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+    networks:
+      - rrhh-net
+
+volumes:
+  pgdata:
+
+networks:
+  rrhh-net:
+    driver: bridge

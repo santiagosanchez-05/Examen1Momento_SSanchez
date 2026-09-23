@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RRHH - Marcaciones</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Marcaciones de personal</h1>
+
+  <h2>Registrar marcación</h2>
+  <form id="form-marcacion">
+    <p><label>Código de empleado: <input name="codigo_empleado" required maxlength="20"></label></p>
+    <p><label>Nombre completo: <input name="nombre_empleado" required maxlength="150"></label></p>
+    <p><label>Fecha: <input name="fecha" type="date" required></label></p>
+    <p><label>Ingreso programado: <input name="hora_ingreso_programada" type="time" required value="08:00"></label></p>
+    <p><label>Ingreso real: <input name="hora_ingreso_real" type="time"></label></p>
+    <p><label>Salida programada: <input name="hora_salida_programada" type="time" required value="16:00"></label></p>
+    <p><label>Salida real: <input name="hora_salida_real" type="time"></label></p>
+    <p><label>Observación: <input name="observacion" maxlength="255"></label></p>
+    <p><button type="submit">Registrar</button></p>
+  </form>
+  <p id="mensaje"></p>
+
+  <h2>Marcaciones registradas</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th><th>Código</th><th>Empleado</th><th>Fecha</th>
+        <th>Ingreso prog.</th><th>Ingreso real</th>
+        <th>Salida prog.</th><th>Salida real</th>
+        <th>Estado</th><th>Observación</th>
+      </tr>
+    </thead>
+    <tbody id="tabla"></tbody>
+  </table>
+
+  <script src="app.js"></script>
+</body>
+</html>
